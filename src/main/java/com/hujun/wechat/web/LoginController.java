@@ -1,6 +1,7 @@
 package com.hujun.wechat.web;
 
 import com.hujun.wechat.util.CheckUtil;
+import com.hujun.wechat.util.ImageMessageUtil;
 import com.hujun.wechat.util.MessageUtil;
 import com.hujun.wechat.util.TextMessageUtil;
 import org.springframework.stereotype.Controller;
@@ -49,10 +50,15 @@ public class LoginController {
         String Content = map.get("Content");
 
         String message = null;
-        //处理文本类型,回复用户输入的内容
+        //处理文本类型，实现输入1，回复相应的封装的内容
         if("text".equals(MsgType)){
-            TextMessageUtil textMessage = new TextMessageUtil();
-            message = textMessage.initMessage(FromUserName, ToUserName, Content);
+            if("图片".equals(Content)){
+                ImageMessageUtil util = new ImageMessageUtil();
+                message = util.initMessage(FromUserName, ToUserName,Content);
+            }else{
+                TextMessageUtil textMessage = new TextMessageUtil();
+                message = textMessage.initMessage(FromUserName, ToUserName,Content);
+            }
         }
         try {
             out = response.getWriter();
@@ -63,4 +69,5 @@ public class LoginController {
         }
         out.close();
     }
+
 }
